@@ -17,7 +17,11 @@ ubuntu.
 
 The sensor is just stacked on top of the wemos d1. Keep in mind that it picks
  up temperature from the board so the reading is not true if used without 
- some form of insulation.
+ some form of insulation. Even with insulation the sensor picks up a lot of 
+ heat from the board so the code puts the board in deepsleep instead of a 
+ while loop. The board waking from deep sleep reconnects to the wifi, to the 
+ mqtt sends the message, disconnects and sleeps again. For the board to wake 
+ up from deep sleep a connection has to be made between gpio16 (D0) and RST.
  
 # Configuration
  

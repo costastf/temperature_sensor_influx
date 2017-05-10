@@ -28,7 +28,10 @@ submit_interval = configuration.get('submit_interval')
 
 
 def main():
-    while True:
+    submit_interval = configuration.get('submit_interval')
+    exception_timeout = configuration.get('exception_reset_timeout')
+    influx_endpoint = configuration.get('influx_endpoint')
+    try:
         temperature, humidity = sensor.measure()
         fields = (u'sensors,',
                   u'location={location}'.format(location=location),
@@ -39,16 +42,19 @@ def main():
         # building influxdb point protocol measurement.
         # See https://docs.influxdata.com/influxdb/v1.2/write_protocols/line_protocol_tutorial/
         point = ''.join(fields)
-        try:
-            response = urequests.post(influx_endpoint,
-                                      data=point,
-                                      headers=headers)
-            response.close()
-            print('Submitted :{}'.format(point))
-        except OSError:
-            print('Caught exception, continuing...')
-            pass
-        time.sleep(submit_interval)
+        response = urequests.post(influx_endpoint,
+                                  data=point,
+                                  headers=headers)
+        response.close()
+        print('Submitted :{}'.format(point))
+        print('Sleeping deeply for {} seconds'.format(submit_interval))
+        # deep sleep argument in microseconds
+        esp.deepsleep(submit_interval * 1000000)
+    except Exception:
+        print(('Caught exception, '
+               'resetting in {} seconds...').format(exception_timeout))
+        time.sleep(exception_timeout)
+        machine.reset()
 
 if __name__ == '__main__':
     main()

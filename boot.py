@@ -16,31 +16,34 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # This file is executed on every boot (including wake-boot from deepsleep)
-#import esp
-#esp.osdebug(None)
-#import webrepl
-#webrepl.start()
 import network
 import time
 import ujson
 import gc
+import machine
 from drivers import SHT30
 
 gc.collect()
-
 # load configuration
 configuration = ujson.loads(open('configuration.json').read())
 ssid = configuration.get('network_ssid')
 password = configuration.get('network_password')
 
 # network initializing
+network_reset_timeout = configuration.get('network_reset_timeout')
 wifi = network.WLAN(network.STA_IF)
 wifi.active(True)
 wifi.connect(ssid, password)
+seconds = 0
 print('Waiting for network...',)
 while not wifi.isconnected():
     time.sleep(1)
+    seconds += 1
     print('.',)
+    if seconds == network_reset_timeout:
+        print(('No network for {} seconds, '
+               'reseting...').format(network_reset_timeout))
+        machine.reset()
 print('Network connected')
 
 # sensor intializing
