@@ -50,7 +50,7 @@ Required tools:
   garbage on the serial and the led staying on. On those boards this command 
   works.
     
-    esptool.py --port /dev/ttyUSB0 write_flash -fm dio -fs 32m 0 Desktop/Unsyncable/esp8266-20170108-v1.8.7.bin
+    esptool.py --port /dev/ttyUSB0 write_flash -fm dio -fs 32m 0 esp8266-20170108-v1.8.7.bin
    
 # Loading the project
 
