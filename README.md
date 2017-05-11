@@ -46,6 +46,11 @@ Required tools:
     esptool.py --port /dev/ttyUSB0 erase_flash
     esptool.py --port /dev/ttyUSB0 --baud 460800 write_flash --flash_size=detect 0 esp8266-20170108-v1.8.7.bin
    
+  I have had some d1 boards having trouble flashing with the above with 
+  garbage on the serial and the led staying on. On those boards this command 
+  works.
+    
+    esptool.py --port /dev/ttyUSB0 write_flash -fm dio -fs 32m 0 Desktop/Unsyncable/esp8266-20170108-v1.8.7.bin
    
 # Loading the project
 
