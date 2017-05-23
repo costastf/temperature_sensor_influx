@@ -16,6 +16,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import urequests
+import machine
+import esp
 import time
 
 headers = {'Accept': 'text/plain',
@@ -50,9 +52,9 @@ def main():
         print('Sleeping deeply for {} seconds'.format(submit_interval))
         # deep sleep argument in microseconds
         esp.deepsleep(submit_interval * 1000000)
-    except Exception:
-        print(('Caught exception, '
-               'resetting in {} seconds...').format(exception_timeout))
+    except Exception as e:
+        print(('Caught exception, {}'
+               'resetting in {} seconds...').format(e, exception_timeout))
         time.sleep(exception_timeout)
         machine.reset()
 
